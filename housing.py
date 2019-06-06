@@ -14,15 +14,21 @@ def process_csv(metro):
         Function to select the metro area of interest from the Zillow.com csv.
         And transpose the dataframe to give a datetime index
         '''
-        
+        #filter metro area of interest
         df0 = df[df['Metro']==metro]
         
+        #clean and transpose dataframe
         df0 = df0.drop(columns = ['RegionID','City','State','Metro','CountyName','SizeRank'])
         df0 = df0.rename(index=str, columns={'RegionName': 'Zipcode'})
         df0 = df0.T
         df0.columns = df0.iloc[0].astype(int).astype(str)
         df0 = df0.copy()[1:]
+        
+        #convert index to datetime index
         df0.index = pd.to_datetime(df0.index)
+        
+        #standardize amounts to thousands of $$
+        df0 = df0.astype(float)/1000
         
         return df0
         
